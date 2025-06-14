@@ -1,4 +1,4 @@
-#2d array of sudoku board, each row is a list
+#2d array of a sudoku board, each row is a list
 
 sudokuboard = [
     [0, 0, 0, 0, 0, 0, 0, 5, 0],
@@ -16,7 +16,7 @@ def print_board(board):
     #print dotted border lines after every third column
     for i in range(len(board)):
         if i % 3 == 0 and i != 0:
-            print("-------------------------")
+            print("------------------------")
 
     #print border lines after every third row 
         for j in range(len(board[0])):
@@ -55,4 +55,39 @@ def is_valid_position(board, number, position):
     return True 
 
 
+def find_empty_square(board): 
+    for i in range(len(board)): 
+        for j in range(len(board[0])): 
+            if board[i][j] == 0: 
+                return (i, j) #row and column of the empty sqaure 
+            
+    return False
 
+
+def solve(board): 
+    emptysquare = find_empty_square(board)
+    if not emptysquare: 
+        return True 
+    
+    row,column = emptysquare
+
+    for i in range(1,10): 
+        if is_valid_position(board, i, (row, column)): #check if adding the number 1-9 is a valid placement
+            board[row][column] = i #if valid, then we add to the board 
+
+            if solve(board): #RECURSIVELY try to finish the solution 
+                return True 
+            
+            board[row][column] = 0 #didnt work, have to backtrack, reset position
+
+    return False 
+
+    
+
+print_board(sudokuboard)
+
+solve(sudokuboard)
+
+print("\n\n")
+
+print_board(sudokuboard)
